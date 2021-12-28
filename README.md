@@ -1,1 +1,3 @@
 # redditReverseAlphaBot
+
+This was a Christmas project (December 2021) inspired by u/alphabet_order_bot. Mainly to play around with Reddit API. It checks the top 10 posts in hot from a pool of max 100 subreddits. This max is arbitrarily set right now to test how long it would have to run and if the free service I plan to host this script on will be able to handle that. Currently planned to try using python anywhere: https://www.pythonanywhere.com or heroku: https://id.heroku.com/login 

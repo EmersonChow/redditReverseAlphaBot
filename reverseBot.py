@@ -174,7 +174,7 @@ if __name__ == "__main__":
         subreddit = reddit.subreddit(subredditName)
         for submission in subreddit.hot(limit=10):
             if blackList.get(submission.subreddit.display_name) == None:
-                if toCheck.get(submission.subreddit.display_name) == None:
+                if len(toCheck.keys) <= 100 and toCheck.get(submission.subreddit.display_name) == None:
                     toAdd.append(submission.subreddit.display_name)
 
                 for comment in submission.comments.list():
@@ -186,22 +186,14 @@ if __name__ == "__main__":
                                 savedData["reverseComments"] += 1
                                 reply = f"Would you look at that, all of the words in your comment are in reverse alphabetical order.\n\nI have checked {savedData['commentsChecked']} comments, and only {savedData['reverseComments']} of them were in reverse alphabetical order."
                                 post_reply(reply,comment)
-                                print("*******************")
-                                print(submission.subreddit.display_name)
-                                print(comment.body)
-                                print(comment.author.name)
                             elif isBretheren(comment, "alphabet_order_bot"):
                                 savedData["timesMetAlphabeticalOrderBot"] += 1
                                 reply = f"Hello u/alphabet_order_bot, we meet again. It's been {savedData['timesMetAlphabeticalOrderBot']} times. I hope you have a great day!"
                                 post_reply(reply,comment)
-                                print("*******************")
-                                print(submission.subreddit.display_name)
-                                print(comment.body)
-                                print(comment.author.name)
 
-                            updateData(savedData)
+                            
 
-    
+    updateData(savedData)
 
     for subreddit in toAdd:
         toCheck[subreddit] = True
