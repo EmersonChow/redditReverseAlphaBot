@@ -174,7 +174,7 @@ if __name__ == "__main__":
         subreddit = reddit.subreddit(subredditName)
         for submission in subreddit.hot(limit=10):
             if blackList.get(submission.subreddit.display_name) == None:
-                if len(toCheck.keys) <= 100 and toCheck.get(submission.subreddit.display_name) == None:
+                if len(toCheck.keys()) <= 100 and toCheck.get(submission.subreddit.display_name) == None:
                     toAdd.append(submission.subreddit.display_name)
 
                 for comment in submission.comments.list():
