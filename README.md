@@ -1,3 +1,6 @@
 # redditReverseAlphaBot
 
 This was a Christmas project (December 2021) inspired by u/alphabet_order_bot. Mainly to play around with Reddit API. It checks the top 10 posts in hot from a pool of max 50 subreddits. If the comment is full of words in reverse, it comments its stats. Additionally, if it runs into u/alphabet_order_bot, it will comment the number of times they've run into each other. The pool limit is arbitrarily set right now to test how long it would have to run and if the free service I host this script on will be able to handle that. It runs on python anywhere: https://www.pythonanywhere.com and recurs once a day. 
+<br><br>
+
+The initial run took 11 subreddits and it took 8200 seconds or around 2 hrs to run based on that service so I reduced the max from 50 to 20. I also changed the algorithm so it will now pull from random subreddits rather than saving a file of subreddits to search through. Since the subreddits will now be random and not always from the most popular ones that reach r/all, the run time will not increase by much if at all. 
