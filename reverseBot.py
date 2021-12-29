@@ -113,17 +113,7 @@ def post_reply(reply,post):
             
             with open("blackListedSubReddits.json", "w") as outfile: 
                 json.dump(blackList, outfile)
-
-            with open("subRedditsToCheck.json", "r") as infile:
-                toCheck = json.load(infile)
-                try:
-                    toCheck.pop(post.subreddit.display_name)
-                except KeyError as ke:
-                    print("CheckList doesn't contain blacklistsubreddit: {post.subreddit.display_name}. Exception {ke}")
-            
-            with open("subRedditsToCheck.json", "w") as outfile: 
-                json.dump(toCheck, outfile)
-            
+       
         return False
 
 def openRedditInstance(accountSpecs):
@@ -138,15 +128,12 @@ def openRedditInstance(accountSpecs):
             username= data["username"],
             password= data["password"],
         )
-        return (data["username"], reddit)
+        return reddit
 
     except Exception as e:
         print("Could not sign into Reddit. Error: {e}")
         raise Exception
 
-def updateData(savedData):
-    with open("savedData.json", "w") as outfile:
-        json.dump(savedData, outfile)
 
 def isBretheren(comment, otherUsername):
     if hasattr(comment, "author") and hasattr(comment.author, "name") and comment.author.name == otherUsername:
@@ -157,7 +144,7 @@ def isBretheren(comment, otherUsername):
 
 
 if __name__ == "__main__":
-    username, reddit = openRedditInstance("accountSpecs.json")
+    reddit = openRedditInstance("accountSpecs.json")
 
     with open("savedData.json", "r") as read_file:
         savedData = json.load(read_file)
@@ -166,42 +153,36 @@ if __name__ == "__main__":
     with open("blackListedSubReddits.json", "r") as infile:
         blackList = json.load(infile)
     
-    with open("subRedditsToCheck.json", "r") as infile:
-        toCheck = json.load(infile)
+    toCheck = []
+    while len(toCheck) < 20:
+        randomSubReddit = reddit.random_subreddit()
+        if blackList.get(randomSubReddit.display_name) == None:
+            toCheck.append(randomSubReddit)
 
-    toAdd = []
-
-    for subredditName in toCheck.keys():
-        subreddit = reddit.subreddit(subredditName)
+    for subreddit in toCheck:
         for submission in subreddit.hot(limit=10):
-            if blackList.get(submission.subreddit.display_name) == None:
-                if len(toCheck.keys()) <= 50 and toCheck.get(submission.subreddit.display_name) == None:
-                    toAdd.append(submission.subreddit.display_name)
+            for comment in submission.comments.list():
+                if hasattr(comment, "body"):
+                    if not is_already_done(reddit.user.me().name, comment) and not comment_limit_reached(comment):
 
-                for comment in submission.comments.list():
-                    if hasattr(comment, "body"):
-                        if not is_already_done(username, comment) and not comment_limit_reached(comment):
+                        savedData["commentsChecked"] += 1
+                        if isReverseAlphabeticalOrder(comment.body):
+                            savedData["reverseComments"] += 1
+                            reply = f"Would you look at that, all of the words in your comment are in reverse alphabetical order.\n\nI have checked {savedData['commentsChecked']} comments, and only {savedData['reverseComments']} of them were in reverse alphabetical order."
+                            print(reply)
+                            print(comment.body)
+                            #post_reply(reply,comment)
+                            #time.sleep(600)
+                        elif isBretheren(comment, "alphabet_order_bot"):
+                            savedData["timesMetAlphabeticalOrderBot"] += 1
+                            reply = f"Hello u/alphabet_order_bot, we meet again. It's been {savedData['timesMetAlphabeticalOrderBot']} times. I hope you have a great day!"
+                            #post_reply(reply,comment)
+                            print(reply)
+                            print(comment.body)
+                            #time.sleep(600)
 
-                            savedData["commentsChecked"] += 1
-                            if isReverseAlphabeticalOrder(comment.body):
-                                savedData["reverseComments"] += 1
-                                reply = f"Would you look at that, all of the words in your comment are in reverse alphabetical order.\n\nI have checked {savedData['commentsChecked']} comments, and only {savedData['reverseComments']} of them were in reverse alphabetical order."
-                                post_reply(reply,comment)
-                                time.sleep(600)
-                            elif isBretheren(comment, "alphabet_order_bot"):
-                                savedData["timesMetAlphabeticalOrderBot"] += 1
-                                reply = f"Hello u/alphabet_order_bot, we meet again. It's been {savedData['timesMetAlphabeticalOrderBot']} times. I hope you have a great day!"
-                                post_reply(reply,comment)
-                                time.sleep(600)
-
-                            
-
-    updateData(savedData)
-
-    for subreddit in toAdd:
-        toCheck[subreddit] = True
-    with open("subRedditsToCheck.json", "w") as outfile:
-        json.dump(toCheck, outfile)
+    with open("savedData.json", "w") as outfile:
+        json.dump(savedData, outfile)
 
 
 
