@@ -169,17 +169,13 @@ if __name__ == "__main__":
                         if isReverseAlphabeticalOrder(comment.body):
                             savedData["reverseComments"] += 1
                             reply = f"Would you look at that, all of the words in your comment are in reverse alphabetical order.\n\nI have checked {savedData['commentsChecked']} comments, and only {savedData['reverseComments']} of them were in reverse alphabetical order."
-                            print(reply)
-                            print(comment.body)
-                            #post_reply(reply,comment)
-                            #time.sleep(600)
+                            post_reply(reply,comment)
+                            time.sleep(600)
                         elif isBretheren(comment, "alphabet_order_bot"):
                             savedData["timesMetAlphabeticalOrderBot"] += 1
                             reply = f"Hello u/alphabet_order_bot, we meet again. It's been {savedData['timesMetAlphabeticalOrderBot']} times. I hope you have a great day!"
-                            #post_reply(reply,comment)
-                            print(reply)
-                            print(comment.body)
-                            #time.sleep(600)
+                            post_reply(reply,comment)
+                            time.sleep(600)
 
     with open("savedData.json", "w") as outfile:
         json.dump(savedData, outfile)
