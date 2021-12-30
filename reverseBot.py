@@ -31,10 +31,9 @@ def preprocessWord(word):
 
 def isReverseAlphabeticalOrder(comment):
     comment = comment.strip()
-    if all([len(word)==1 for word in comment]):
-        return False
-
     fullComment = comment.split(" ")
+    if all([len(word)==1 for word in fullComment]):
+        return False
 
     if len(fullComment) > 1:
         for word in fullComment:
