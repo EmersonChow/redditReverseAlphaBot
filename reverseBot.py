@@ -175,7 +175,7 @@ if __name__ == "__main__":
                             time.sleep(600)
                         elif isBretheren(comment, "alphabet_order_bot"):
                             savedData["timesMetAlphabeticalOrderBot"] += 1
-                            reply = f"Hello u/alphabet_order_bot, we meet again. It's been {savedData['timesMetAlphabeticalOrderBot']} times. I hope you have a great day!"
+                            reply = f"Hello u/alphabet_order_bot, we meet again. I have checked {savedData['commentsChecked']} comments and we've met {savedData['timesMetAlphabeticalOrderBot']} times. I hope you have a great day!"
                             post_reply(reply,comment)
                             time.sleep(600)
 
